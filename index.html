@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>StudyHub — Your All-in-One Student Companion</title>
+  <meta name="description" content="StudyHub helps students stay organised: track assignments, plan your weekly timetable, focus with a Pomodoro timer, take notes, calculate your GPA and revise with flashcards.">
+  <meta name="theme-color" content="#4f46e5">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎓</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<div class="app" id="app">
+  <div class="backdrop" id="backdrop"></div>
+
+  <!-- ============ SIDEBAR ============ -->
+  <aside class="sidebar" id="sidebar" aria-label="Main navigation">
+    <a href="#dashboard" class="brand">
+      <span class="brand-logo" aria-hidden="true">🎓</span>
+      <span class="brand-name">StudyHub</span>
+    </a>
+
+    <nav class="nav">
+      <a href="#dashboard" class="nav-link" data-page="dashboard">
+        <svg viewBox="0 0 24 24"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        Dashboard
+      </a>
+      <a href="#tasks" class="nav-link" data-page="tasks">
+        <svg viewBox="0 0 24 24"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        Assignments
+        <span class="nav-count" id="navTaskCount" hidden>0</span>
+      </a>
+      <a href="#timetable" class="nav-link" data-page="timetable">
+        <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Timetable
+      </a>
+      <a href="#timer" class="nav-link" data-page="timer">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        Study Timer
+      </a>
+      <a href="#notes" class="nav-link" data-page="notes">
+        <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        Notes
+      </a>
+      <a href="#gpa" class="nav-link" data-page="gpa">
+        <svg viewBox="0 0 24 24"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="16" y1="14" x2="16" y2="18"/><path d="M16 10h.01M12 10h.01M8 10h.01M12 14h.01M8 14h.01M12 18h.01M8 18h.01"/></svg>
+        GPA Calculator
+      </a>
+      <a href="#flashcards" class="nav-link" data-page="flashcards">
+        <svg viewBox="0 0 24 24"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+        Flashcards
+      </a>
+      <a href="#resources" class="nav-link" data-page="resources">
+        <svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+        Resources
+      </a>
+      <a href="#settings" class="nav-link" data-page="settings">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        Settings
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <button class="btn btn-ghost btn-block" id="themeToggle" type="button">
+        <svg id="themeIconMoon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <svg id="themeIconSun" viewBox="0 0 24 24" hidden><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+        <span id="themeLabel">Dark mode</span>
+      </button>
+      <p class="sidebar-note">Data is saved privately in your browser.</p>
+    </div>
+  </aside>
+
+  <!-- ============ MAIN ============ -->
+  <main class="main">
+    <header class="topbar">
+      <button class="icon-btn" id="menuBtn" type="button" aria-label="Open menu" aria-controls="sidebar">
+        <svg viewBox="0 0 24 24"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+      <h1 class="page-title" id="pageTitle">Dashboard</h1>
+      <div class="topbar-right">
+        <span class="date-chip" id="todayChip"></span>
+      </div>
+    </header>
+
+    <div class="content">
+
+      <!-- ===== DASHBOARD ===== -->
+      <section class="page stack" id="page-dashboard">
+        <div class="card hero">
+          <div class="hero-text">
+            <p class="hero-kicker" id="heroDate"></p>
+            <h2 class="hero-title" id="greeting">Welcome!</h2>
+            <p class="hero-sub" id="heroSub"></p>
+          </div>
+          <figure class="quote">
+            <blockquote class="quote-text" id="quoteText"></blockquote>
+            <figcaption class="quote-author" id="quoteAuthor"></figcaption>
+          </figure>
+        </div>
+
+        <div class="stats-grid">
+          <a href="#tasks" class="card stat">
+            <div class="stat-icon">
+              <svg viewBox="0 0 24 24"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+            </div>
+            <div><div class="stat-value" id="statPending">0</div><div class="stat-label">Pending tasks</div></div>
+          </a>
+          <a href="#tasks" class="card stat">
+            <div class="stat-icon amber">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            </div>
+            <div><div class="stat-value" id="statToday">0</div><div class="stat-label" id="statTodayLabel">Due today</div></div>
+          </a>
+          <a href="#timer" class="card stat">
+            <div class="stat-icon green">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            </div>
+            <div><div class="stat-value" id="statSessions">0</div><div class="stat-label">Focus sessions today</div></div>
+          </a>
+          <a href="#gpa" class="card stat">
+            <div class="stat-icon pink">
+              <svg viewBox="0 0 24 24"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+            </div>
+            <div><div class="stat-value" id="statGPA">—</div><div class="stat-label">Current GPA</div></div>
+          </a>
+        </div>
+
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-header"><h3>Upcoming deadlines</h3><a href="#tasks" class="link">View all</a></div>
+            <ul class="list" id="dashTasks"></ul>
+          </div>
+          <div class="card">
+            <div class="card-header"><h3>Today's classes</h3><a href="#timetable" class="link">Timetable</a></div>
+            <ul class="list" id="dashClasses"></ul>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header"><h3>Quick actions</h3></div>
+          <div class="quick-actions">
+            <a href="#timer" class="quick-action"><span class="qa-icon">⏱️</span> Start a focus session</a>
+            <a href="#tasks" class="quick-action"><span class="qa-icon">📝</span> Add an assignment</a>
+            <a href="#notes" class="quick-action"><span class="qa-icon">🗒️</span> Write a note</a>
+            <a href="#flashcards" class="quick-action"><span class="qa-icon">🃏</span> Revise flashcards</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== ASSIGNMENTS ===== -->
+      <section class="page" id="page-tasks">
+        <div class="grid-sidebar">
+          <div class="card">
+            <div class="card-header"><h3>Add assignment</h3></div>
+            <form id="taskForm" class="form" autocomplete="off">
+              <label>Title <input name="title" required maxlength="120" placeholder="e.g. Physics lab report"></label>
+              <label>Subject <input name="subject" maxlength="40" list="subjectList" placeholder="e.g. Physics"></label>
+              <datalist id="subjectList"></datalist>
+              <div class="form-row">
+                <label>Due date <input type="date" name="due" required></label>
+                <label>Priority
+                  <select name="priority">
+                    <option value="low">Low</option>
+                    <option value="medium" selected>Medium</option>
+                    <option value="high">High</option>
+                  </select>
+                </label>
+              </div>
+              <button class="btn btn-primary" type="submit">Add assignment</button>
+            </form>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <h3>Your assignments</h3>
+              <div class="segmented" id="taskFilter" role="tablist">
+                <button type="button" data-filter="all" class="active">All</button>
+                <button type="button" data-filter="pending">Pending</button>
+                <button type="button" data-filter="done">Done</button>
+              </div>
+            </div>
+            <div class="progress" aria-hidden="true"><div class="progress-bar" id="taskProgress"></div></div>
+            <p class="muted small" id="taskSummary"></p>
+            <ul class="task-list" id="taskList"></ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== TIMETABLE ===== -->
+      <section class="page" id="page-timetable">
+        <div class="grid-sidebar">
+          <div class="card">
+            <div class="card-header"><h3>Add class</h3></div>
+            <form id="classForm" class="form" autocomplete="off">
+              <label>Subject <input name="subject" required maxlength="40" list="subjectList" placeholder="e.g. Calculus II"></label>
+              <label>Day <select name="day"></select></label>
+              <div class="form-row">
+                <label>Starts <input type="time" name="start" required value="09:00"></label>
+                <label>Ends <input type="time" name="end" required value="10:00"></label>
+              </div>
+              <label>Location <input name="location" maxlength="40" placeholder="Room 204 / Online"></label>
+              <button class="btn btn-primary" type="submit">Add to timetable</button>
+            </form>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <h3>Weekly timetable</h3>
+              <span class="muted small">Hover a class to remove it</span>
+            </div>
+            <div class="timetable" id="timetable"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== STUDY TIMER ===== -->
+      <section class="page" id="page-timer">
+        <div class="grid-2 timer-layout">
+          <div class="card timer-card" data-mode="focus">
+            <div class="segmented" id="timerModes">
+              <button type="button" data-mode="focus" class="active">Focus</button>
+              <button type="button" data-mode="short">Short break</button>
+              <button type="button" data-mode="long">Long break</button>
+            </div>
+            <div class="timer-ring">
+              <svg viewBox="0 0 260 260" aria-hidden="true">
+                <circle class="ring-bg" cx="130" cy="130" r="118"/>
+                <circle class="ring-fg" id="ringFg" cx="130" cy="130" r="118"/>
+              </svg>
+              <div class="timer-display" role="timer" aria-live="off">
+                <div class="timer-time" id="timerTime">25:00</div>
+                <div class="timer-label" id="timerLabel">Time to focus</div>
+              </div>
+            </div>
+            <div class="timer-controls">
+              <button class="btn btn-primary btn-lg" id="timerStart" type="button">Start</button>
+              <button class="btn btn-ghost btn-lg" id="timerReset" type="button">Reset</button>
+            </div>
+            <p class="muted small">Focus sessions completed today: <strong id="timerSessions">0</strong></p>
+          </div>
+
+          <div class="card">
+            <div class="card-header"><h3>How the Pomodoro technique works</h3></div>
+            <ol class="steps">
+              <li>Pick one task and commit to it.</li>
+              <li>Work with full focus for 25 minutes — no phone, no tabs.</li>
+              <li>Take a 5-minute break: stretch, get water, look away from the screen.</li>
+              <li>After 4 sessions, reward yourself with a longer 15-minute break.</li>
+            </ol>
+            <h4 class="subheading">Timer settings</h4>
+            <div class="form-row-3">
+              <label class="field">Focus (min) <input type="number" id="setFocus" min="1" max="180"></label>
+              <label class="field">Short break <input type="number" id="setShort" min="1" max="60"></label>
+              <label class="field">Long break <input type="number" id="setLong" min="1" max="90"></label>
+            </div>
+            <label class="checkbox"><input type="checkbox" id="setSound" checked> Play a sound when the timer ends</label>
+            <label class="checkbox"><input type="checkbox" id="setNotify"> Show a browser notification when the timer ends</label>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== NOTES ===== -->
+      <section class="page" id="page-notes">
+        <div class="notes-layout">
+          <div class="card notes-side">
+            <div class="notes-side-header">
+              <input type="search" id="noteSearch" placeholder="Search notes…" aria-label="Search notes">
+              <button class="btn btn-primary" id="noteNew" type="button">+ New</button>
+            </div>
+            <ul class="notes-list" id="notesList"></ul>
+          </div>
+          <div class="card notes-editor">
+            <div class="empty tall" id="notesEmpty">
+              <div class="empty-emoji">🗒️</div>
+              <p>Select a note or create a new one.<br>Your notes save automatically as you type.</p>
+            </div>
+            <div id="noteEditorInner" class="note-editor-inner" hidden>
+              <input id="noteTitle" class="note-title-input" placeholder="Note title" maxlength="100" aria-label="Note title">
+              <textarea id="noteBody" placeholder="Start typing…" aria-label="Note content"></textarea>
+              <div class="note-footer">
+                <span class="muted small" id="noteMeta"></span>
+                <button class="btn btn-danger-ghost" id="noteDelete" type="button">Delete note</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== GPA ===== -->
+      <section class="page" id="page-gpa">
+        <div class="grid-sidebar">
+          <div class="card">
+            <div class="card-header"><h3>Add course</h3></div>
+            <form id="courseForm" class="form" autocomplete="off">
+              <label>Course <input name="name" required maxlength="60" placeholder="e.g. Linear Algebra"></label>
+              <div class="form-row">
+                <label>Credits <input type="number" name="credits" min="0.5" max="20" step="0.5" value="3" required></label>
+                <label>Grade <select name="grade"></select></label>
+              </div>
+              <button class="btn btn-primary" type="submit">Add course</button>
+            </form>
+            <h4 class="subheading">Grade scale (4.0)</h4>
+            <div class="scale-grid" id="gradeScale"></div>
+          </div>
+
+          <div class="card">
+            <div class="gpa-result">
+              <div class="gpa-big" id="gpaValue">—</div>
+              <div class="muted">Cumulative GPA · <span id="gpaCredits">0</span> credits</div>
+              <p class="gpa-label" id="gpaLabel"></p>
+            </div>
+            <table class="table" id="courseTable">
+              <thead><tr><th>Course</th><th>Credits</th><th>Grade</th><th>Points</th><th></th></tr></thead>
+              <tbody id="courseRows"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== FLASHCARDS ===== -->
+      <section class="page" id="page-flashcards">
+        <div class="grid-sidebar">
+          <div class="card">
+            <div class="card-header"><h3>Decks</h3></div>
+            <form id="deckForm" class="form-inline" autocomplete="off">
+              <input name="name" required maxlength="40" placeholder="New deck name" aria-label="New deck name">
+              <button class="btn btn-primary" type="submit">Create</button>
+            </form>
+            <ul class="deck-list" id="deckList"></ul>
+          </div>
+
+          <div class="card">
+            <div class="empty tall" id="deckEmpty">
+              <div class="empty-emoji">🃏</div>
+              <p>Create or select a deck to start revising.<br>Click a card to flip it — use ← → keys to move between cards.</p>
+            </div>
+            <div id="deckInner" hidden>
+              <div class="card-header">
+                <h3 id="deckTitle"></h3>
+                <div class="btn-group">
+                  <button class="btn btn-ghost" id="deckShuffle" type="button">Shuffle</button>
+                  <button class="btn btn-danger-ghost" id="deckDelete" type="button">Delete deck</button>
+                </div>
+              </div>
+              <div class="flashcard-stage">
+                <div class="flashcard" id="flashcard" role="button" tabindex="0" aria-label="Flip card">
+                  <div class="flashcard-inner">
+                    <div class="flashcard-face front"><span id="fcFront"></span><span class="flashcard-hint">Click to reveal answer</span></div>
+                    <div class="flashcard-face back"><span id="fcBack"></span><span class="flashcard-hint">Click to see question</span></div>
+                  </div>
+                </div>
+                <div class="flashcard-nav">
+                  <button class="btn btn-ghost" id="fcPrev" type="button">← Prev</button>
+                  <span id="fcCounter">0 / 0</span>
+                  <button class="btn btn-ghost" id="fcNext" type="button">Next →</button>
+                </div>
+              </div>
+              <details class="add-card" id="addCardDetails" open>
+                <summary>Add a card</summary>
+                <form id="cardForm" class="form" autocomplete="off">
+                  <label>Front (question) <input name="front" required maxlength="200" placeholder="e.g. What is the derivative of sin(x)?"></label>
+                  <label>Back (answer) <textarea name="back" required rows="2" maxlength="500" placeholder="e.g. cos(x)"></textarea></label>
+                  <button class="btn btn-primary" type="submit">Add card</button>
+                </form>
+              </details>
+              <ul class="card-list" id="cardList"></ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== RESOURCES ===== -->
+      <section class="page" id="page-resources">
+        <div class="card">
+          <div class="card-header"><h3>Study techniques that actually work</h3></div>
+          <div class="tips-grid">
+            <div class="tip"><div class="tip-emoji">🧠</div><div><div class="tip-title">Active recall</div><p>Close the book and test yourself. Retrieving information strengthens memory far more than re-reading.</p></div></div>
+            <div class="tip"><div class="tip-emoji">📆</div><div><div class="tip-title">Spaced repetition</div><p>Review material at increasing intervals — 1 day, 3 days, 1 week — instead of cramming.</p></div></div>
+            <div class="tip"><div class="tip-emoji">🍅</div><div><div class="tip-title">Pomodoro</div><p>Work in focused 25-minute blocks with short breaks. Try it with the <a href="#timer" class="link">Study Timer</a>.</p></div></div>
+            <div class="tip"><div class="tip-emoji">👩‍🏫</div><div><div class="tip-title">Feynman technique</div><p>Explain a concept in simple words as if teaching a child. Gaps in your explanation reveal gaps in understanding.</p></div></div>
+            <div class="tip"><div class="tip-emoji">🔀</div><div><div class="tip-title">Interleaving</div><p>Mix different topics or problem types in one session rather than blocking a single topic.</p></div></div>
+            <div class="tip"><div class="tip-emoji">😴</div><div><div class="tip-title">Sleep &amp; breaks</div><p>Memory consolidates during sleep. An all-nighter usually costs more than it earns.</p></div></div>
+          </div>
+        </div>
+
+        <h3 class="section-title">Learning platforms</h3>
+        <div class="res-grid">
+          <a class="res-card" href="https://www.khanacademy.org" target="_blank" rel="noopener"><span class="res-emoji">📚</span><div><div class="res-title">Khan Academy</div><div class="res-desc">Free lessons in maths, science, economics and more.</div></div></a>
+          <a class="res-card" href="https://ocw.mit.edu" target="_blank" rel="noopener"><span class="res-emoji">🏛️</span><div><div class="res-title">MIT OpenCourseWare</div><div class="res-desc">Free lecture notes, exams and videos from MIT.</div></div></a>
+          <a class="res-card" href="https://www.coursera.org" target="_blank" rel="noopener"><span class="res-emoji">🎓</span><div><div class="res-title">Coursera</div><div class="res-desc">University courses you can audit for free.</div></div></a>
+          <a class="res-card" href="https://www.edx.org" target="_blank" rel="noopener"><span class="res-emoji">🧪</span><div><div class="res-title">edX</div><div class="res-desc">Courses from Harvard, MIT, Berkeley and others.</div></div></a>
+          <a class="res-card" href="https://www.freecodecamp.org" target="_blank" rel="noopener"><span class="res-emoji">💻</span><div><div class="res-title">freeCodeCamp</div><div class="res-desc">Learn to code with free interactive lessons.</div></div></a>
+          <a class="res-card" href="https://www.duolingo.com" target="_blank" rel="noopener"><span class="res-emoji">🦉</span><div><div class="res-title">Duolingo</div><div class="res-desc">Bite-sized language practice every day.</div></div></a>
+        </div>
+
+        <h3 class="section-title">Research, writing &amp; tools</h3>
+        <div class="res-grid">
+          <a class="res-card" href="https://scholar.google.com" target="_blank" rel="noopener"><span class="res-emoji">🔎</span><div><div class="res-title">Google Scholar</div><div class="res-desc">Search academic papers, theses and citations.</div></div></a>
+          <a class="res-card" href="https://www.wolframalpha.com" target="_blank" rel="noopener"><span class="res-emoji">∑</span><div><div class="res-title">Wolfram Alpha</div><div class="res-desc">Step-by-step maths and computational answers.</div></div></a>
+          <a class="res-card" href="https://www.desmos.com/calculator" target="_blank" rel="noopener"><span class="res-emoji">📈</span><div><div class="res-title">Desmos</div><div class="res-desc">Beautiful, free online graphing calculator.</div></div></a>
+          <a class="res-card" href="https://owl.purdue.edu/owl/purdue_owl.html" target="_blank" rel="noopener"><span class="res-emoji">🦉</span><div><div class="res-title">Purdue OWL</div><div class="res-desc">Essay writing, grammar and APA/MLA citation guides.</div></div></a>
+          <a class="res-card" href="https://www.zotero.org" target="_blank" rel="noopener"><span class="res-emoji">📑</span><div><div class="res-title">Zotero</div><div class="res-desc">Free reference manager for organising sources.</div></div></a>
+          <a class="res-card" href="https://libretexts.org" target="_blank" rel="noopener"><span class="res-emoji">📖</span><div><div class="res-title">LibreTexts</div><div class="res-desc">Free open textbooks across many subjects.</div></div></a>
+          <a class="res-card" href="https://www.gutenberg.org" target="_blank" rel="noopener"><span class="res-emoji">📜</span><div><div class="res-title">Project Gutenberg</div><div class="res-desc">70,000+ free classic ebooks.</div></div></a>
+          <a class="res-card" href="https://apps.ankiweb.net" target="_blank" rel="noopener"><span class="res-emoji">🗂️</span><div><div class="res-title">Anki</div><div class="res-desc">Powerful spaced-repetition flashcards.</div></div></a>
+        </div>
+      </section>
+
+      <!-- ===== SETTINGS ===== -->
+      <section class="page" id="page-settings">
+        <div class="settings-grid">
+          <div class="card">
+            <div class="card-header"><h3>Profile</h3></div>
+            <label class="field">Your name <input id="settingName" maxlength="40" placeholder="Used in your dashboard greeting"></label>
+            <div class="setting-row">
+              <div><strong>Appearance</strong><div class="muted small">Switch between light and dark themes.</div></div>
+              <button class="btn btn-ghost" id="themeToggle2" type="button">Toggle theme</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header"><h3>Your data</h3></div>
+            <p class="muted small">Everything you add to StudyHub is stored only in this browser. Export a backup to move it to another device.</p>
+            <div class="setting-row">
+              <div><strong>Export backup</strong><div class="muted small">Download all your data as a JSON file.</div></div>
+              <button class="btn btn-ghost" id="exportBtn" type="button">Export</button>
+            </div>
+            <div class="setting-row">
+              <div><strong>Import backup</strong><div class="muted small">Restore from a StudyHub JSON file.</div></div>
+              <label class="btn btn-ghost file-btn">Import<input type="file" id="importFile" accept="application/json,.json"></label>
+            </div>
+            <div class="setting-row">
+              <div><strong>Sample data</strong><div class="muted small">Populate the app with example content.</div></div>
+              <button class="btn btn-ghost" id="loadSampleBtn" type="button">Load sample</button>
+            </div>
+            <div class="setting-row">
+              <div><strong>Clear all data</strong><div class="muted small" id="storageInfo">Permanently deletes everything.</div></div>
+              <button class="btn btn-danger" id="clearBtn" type="button">Clear</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header"><h3>About StudyHub</h3></div>
+            <p class="muted">StudyHub is a free, open student companion: track assignments, plan your week, focus with Pomodoro sessions, keep notes, calculate your GPA and revise with flashcards — all in one place, with no account required.</p>
+            <p class="muted small">Tip: bookmark this page or add it to your home screen for quick access.</p>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+</div>
+
+<div class="toast-container" id="toasts" aria-live="polite"></div>
+
+<!-- ===== WELCOME MODAL ===== -->
+<div class="modal" id="welcomeModal" role="dialog" aria-modal="true" aria-labelledby="welcomeTitle">
+  <form class="modal-card" id="welcomeForm" autocomplete="off">
+    <div class="brand-logo modal-logo" aria-hidden="true">🎓</div>
+    <h2 id="welcomeTitle">Welcome to StudyHub</h2>
+    <p class="muted">Your all-in-one companion for assignments, timetables, focused study sessions, notes, grades and flashcards. Everything is saved privately in your browser.</p>
+    <label class="field">What should we call you? <input id="welcomeName" maxlength="40" placeholder="Your first name" autocomplete="given-name"></label>
+    <label class="checkbox"><input type="checkbox" id="welcomeSample" checked> Load sample data so I can explore</label>
+    <div class="modal-actions">
+      <button type="button" class="btn btn-ghost" id="welcomeSkip">Skip</button>
+      <button type="submit" class="btn btn-primary">Get started</button>
+    </div>
+  </form>
+</div>
+
+<script src="js/app.js"></script>
+</body>
+</html>
