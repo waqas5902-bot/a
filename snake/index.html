@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Neon Snake — a bite-sized arcade game</title>
+  <meta name="description" content="Neon Snake is a fast, glowing arcade snake game. Eat food, chain combos, dodge the walls — all in your browser, no install, nothing uploaded." />
+  <meta name="theme-color" content="#0b0e1a" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b0e1a'/%3E%3Cpath d='M22 7a2 2 0 1 0 0 4 2 2 0 0 0 0-4z' fill='%2322d3ee'/%3E%3Cpath d='M8 24c0-4 3-5 6-6 3 1 6 2 6 6H8z' fill='%23f43f5e'/%3E%3Cpath d='M11 12h10a3 3 0 0 1 0 6h-2a2 2 0 0 0 0 4' fill='none' stroke='%2322d3ee' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <main class="shell">
+    <header class="top">
+      <h1 class="title" aria-label="Neon Snake">NEON<span class="title-accent">SNAKE</span></h1>
+      <div class="hud" role="group" aria-label="Game stats">
+        <div class="hud-item">
+          <span class="hud-label">Score</span>
+          <span class="hud-value" id="score" aria-live="polite">0</span>
+        </div>
+        <div class="hud-item">
+          <span class="hud-label">Best</span>
+          <span class="hud-value" id="best">0</span>
+        </div>
+        <div class="hud-item">
+          <span class="hud-label">Length</span>
+          <span class="hud-value" id="length">3</span>
+        </div>
+        <div class="hud-item">
+          <span class="hud-label">Level</span>
+          <span class="hud-value" id="level">1</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="board-wrap">
+      <canvas id="game" tabindex="0" aria-label="Neon Snake game board. Use arrow keys or WASD to steer, P to pause."></canvas>
+
+      <div class="overlay" id="overlay">
+        <!-- MENU -->
+        <section class="panel" id="menu-panel" aria-labelledby="menu-title">
+          <p class="panel-kicker">A bite-sized arcade game</p>
+          <h2 class="panel-title" id="menu-title">Ready to play?</h2>
+          <p class="panel-copy">
+            Steer the snake with <strong>arrow keys</strong> / <strong>WASD</strong> or
+            <strong>swipe</strong>. Eat food to grow. Chain bites fast for a <strong>combo</strong>
+            multiplier. Grab the rare golden orb for bonus points.
+          </p>
+
+          <div class="setting-group">
+            <span class="setting-label">Difficulty</span>
+            <div class="seg" role="group" aria-label="Difficulty">
+              <button type="button" class="seg-btn" data-diff="easy">Easy</button>
+              <button type="button" class="seg-btn is-active" data-diff="normal">Normal</button>
+              <button type="button" class="seg-btn" data-diff="hard">Hard</button>
+            </div>
+          </div>
+
+          <div class="setting-group setting-row">
+            <div class="setting-stack">
+              <span class="setting-label">Walls</span>
+              <span class="setting-helper">Wrap around the edges</span>
+            </div>
+            <button type="button" class="switch" id="wrap-toggle" role="switch" aria-checked="false">
+              <span class="switch-track" aria-hidden="true"><span class="switch-thumb"></span></span>
+              <span class="switch-text">Off</span>
+            </button>
+          </div>
+
+          <button class="btn btn-primary" type="button" id="start-btn">▶&nbsp; Start game</button>
+          <p class="panel-hint">Press <kbd>Enter</kbd> / <kbd>Space</kbd> to start</p>
+        </section>
+
+        <!-- PAUSE -->
+        <section class="panel" id="pause-panel" hidden aria-labelledby="pause-title">
+          <h2 class="panel-title" id="pause-title">Paused</h2>
+          <p class="panel-copy">Catch your breath.</p>
+          <button class="btn btn-primary" type="button" id="resume-btn">▶&nbsp; Resume</button>
+          <p class="panel-hint">Press <kbd>P</kbd> or <kbd>Enter</kbd> to resume</p>
+        </section>
+
+        <!-- GAME OVER -->
+        <section class="panel" id="over-panel" hidden aria-labelledby="over-title">
+          <p class="panel-kicker" id="over-kicker">Game over</p>
+          <h2 class="panel-title" id="over-title">You crashed!</h2>
+          <div class="final-stats">
+            <div class="final"><span class="final-label">Score</span><span class="final-value" id="final-score">0</span></div>
+            <div class="final"><span class="final-label">Best</span><span class="final-value" id="final-best">0</span></div>
+            <div class="final"><span class="final-label">Combo</span><span class="final-value" id="final-combo">0</span></div>
+            <div class="final"><span class="final-label">Length</span><span class="final-value" id="final-length">3</span></div>
+          </div>
+          <p class="panel-copy" id="newbest-copy" hidden>🏆 New best score!</p>
+          <button class="btn btn-primary" type="button" id="restart-btn">↻&nbsp; Play again</button>
+          <p class="panel-hint">Press <kbd>Enter</kbd> / <kbd>Space</kbd> to play again</p>
+        </section>
+      </div>
+    </div>
+
+    <div class="controls">
+      <div class="key-hints" aria-hidden="true">
+        <span><kbd>↑</kbd><kbd>↓</kbd><kbd>←</kbd><kbd>→</kbd> or <kbd>WASD</kbd> steer</span>
+        <span><kbd>P</kbd> pause</span>
+        <span><kbd>M</kbd> sound</span>
+      </div>
+      <div class="controls-actions">
+        <button class="chip" type="button" id="mute-btn" aria-pressed="true">🔊 Sound on</button>
+        <button class="chip" type="button" id="replay-btn">↻ Restart</button>
+      </div>
+    </div>
+
+    <p class="combo-banner" id="combo-banner" role="status" hidden>Combo ×0</p>
+  </main>
+
+  <noscript><div class="noscript">Neon Snake needs JavaScript to run. Please enable it.</div></noscript>
+  <script src="./game.js"></script>
+</body>
+</html>

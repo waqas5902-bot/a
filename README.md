@@ -26,12 +26,13 @@ The server binds `0.0.0.0`, so it works behind a proxy or in a container.
 npm test
 ```
 
-68 tests across two layers:
+76 tests across three layers:
 
 | Layer | Files | What it covers |
 | --- | --- | --- |
 | Unit | `tests/date.test.mjs`, `gpa`, `tasks`, `timetable`, `pomodoro`, `notes`, `storage` | The pure logic in `assets/js/lib/*.mjs` — date maths, credit-weighted GPA, task sorting, clash detection, the Pomodoro state machine, storage round-trips |
 | Integration | `tests/app.integration.test.mjs` | Boots the **real** `index.html` and `assets/js/app.js` inside jsdom, then types into the forms, ticks checkboxes, clicks nav and asserts what was rendered and what hit `localStorage` |
+| Game | `tests/snake.test.mjs` | Boots the **real** `snake/index.html` + `snake/game.js` inside jsdom and drives it like a player: start, steer, pause, settings, crashing into a wall, wrap mode |
 
 The app code contains no logic of its own — `app.js` only reads state, draws it and handles
 input, so the unit tests cover the rules and the integration test proves they are wired up.
@@ -81,10 +82,18 @@ assets/css/styles.css      design tokens, light/dark themes, all components
 assets/js/app.js           view layer: render + events + localStorage
 assets/js/lib/*.mjs        pure, unit-tested logic (date, tasks, timetable,
                            pomodoro, notes, gpa, resources, storage)
+snake/                     Neon Snake — a standalone arcade game (see snake/README.md)
 server.mjs                 dependency-free static server (traversal-safe, 404 page)
 tests/                     unit + jsdom integration tests
 404.html                   served for unknown routes
 ```
+
+## Neon Snake
+
+The repo also ships a standalone arcade game at [`snake/`](snake/README.md) — run
+`npm start` and visit <http://localhost:3000/snake/>. It is deliberately independent of the
+StudyHub app (its own `index.html`, `style.css` and `game.js`), with combo scoring, golden
+orbs, wrap-or-crash walls, saved high scores and touch/keyboard controls.
 
 ## Data and privacy
 
